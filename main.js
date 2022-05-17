@@ -6,6 +6,7 @@ const ORANGE = "#ffc457";
 const PINK = "#c22eb8";
 
 const GAP = 10;
+const MATRIX_GAP = 15; // gap between matrices in a 3D array
 const CELL_SIZE = 25;
 
 const canvas = document.getElementById("vis");
@@ -34,10 +35,8 @@ function visualize() {
         .map(size => parse_int(size))
     );
 
-    console.log(shape);
-
     if (shape.some(size => isNaN(size))) {
-        alert("Cannot parse gibberish! Enter a valid shape.");
+        alert("Enter a valid shape!");
         return;
     }
 
@@ -64,13 +63,23 @@ function canvas_size(shape) {
     let width = 2 * GAP,
         height = 2 * GAP;
 
-    if (shape.length == 1) {
-        width += CELL_SIZE * shape[0] + (shape[0] - 1) * GAP;
-        height += CELL_SIZE;
-    } else if (shape.length == 2) {
-        let [n_rows, n_cols] = shape;
-        width += 2 * GAP + CELL_SIZE * n_cols + (n_cols - 1) * GAP;
-        height += n_rows * CELL_SIZE + (n_rows + 1) * GAP;
+    let n_mats, n_rows, n_cols;
+    switch (shape.length) {
+        case 1:
+            width += CELL_SIZE * shape[0] + (shape[0] - 1) * GAP;
+            height += CELL_SIZE;
+            break;
+
+        case 2:
+            [n_rows, n_cols] = shape;
+            width += 2 * GAP + CELL_SIZE * n_cols + (n_cols - 1) * GAP;
+            height += n_rows * CELL_SIZE + (n_rows + 1) * GAP;
+            break;
+
+        case 3:
+            [n_mats, n_rows, n_cols] = shape;
+            width += 2 * GAP + CELL_SIZE * n_cols + (n_cols - 1) * GAP + (n_mats - 1) * MATRIX_GAP;
+            height += n_rows * CELL_SIZE + (n_rows + 1) * GAP + (n_mats - 1) * MATRIX_GAP;
     }
 
     return [width, height];
@@ -84,9 +93,11 @@ function clear_canvas() {
 /*** DRAWING STUFF ***/
 function draw(shape) {
     if (shape.length == 1)
-        draw_vector(shape[0]);
+        draw_1d(shape[0]);
     else if (shape.length == 2)
-        draw_matrix(shape[0], shape[1]);
+        draw_2d(shape[0], shape[1]);
+    else if (shape.length == 3)
+        draw_3d(shape[0], shape[1], shape[2])
     else
         draw_ndim(shape);
 
@@ -96,7 +107,7 @@ function draw(shape) {
     });
 }
 
-function draw_vector(len, x = GAP, y = GAP, bg_color = BG_COLOR) {
+function draw_1d(len, x = GAP, y = GAP, bg_color = BG_COLOR) {
     ctx.fillStyle = BLUE;
     ctx.fillRect(x, y, CELL_SIZE * len + (len - 1) * GAP, CELL_SIZE);
 
@@ -108,9 +119,12 @@ function draw_vector(len, x = GAP, y = GAP, bg_color = BG_COLOR) {
     }
 }
 
-function draw_matrix(n_rows, n_cols, x = GAP, y = GAP) {
-    let matrix_width = 2 * GAP + n_cols * CELL_SIZE + (n_cols - 1) * GAP;
-    let matrix_height = n_rows * CELL_SIZE + (n_rows + 1) * GAP;
+function draw_2d(n_rows, n_cols, x = GAP, y = GAP, complete = true) {
+    const matrix_width = 2 * GAP + n_cols * CELL_SIZE + (n_cols - 1) * GAP;
+    const matrix_height = n_rows * CELL_SIZE + (n_rows + 1) * GAP;
+
+    ctx.fillStyle = BG_COLOR;
+    ctx.fillRect(x, y, matrix_width, matrix_height)
 
     ctx.lineWidth = 2;
     ctx.strokeStyle = PINK;
@@ -119,14 +133,34 @@ function draw_matrix(n_rows, n_cols, x = GAP, y = GAP) {
     x += GAP;
     y += GAP;
 
-    for (let i = 0; i < n_rows; ++i) {
-        draw_vector(n_cols, x, y);
+    if (complete) {
+        for (let i = 0; i < n_rows; ++i) {
+            draw_1d(n_cols, x, y);
+            y += CELL_SIZE + GAP;
+        }
+    } else {
+        draw_1d(n_cols, x, y);
         y += CELL_SIZE + GAP;
+
+        for (let i = 1; i < n_rows; ++i) {
+            draw_1d(1, x, y);
+            y += CELL_SIZE + GAP;
+        }
     }
 }
 
+function draw_3d(n_mats, n_rows, n_cols, x = GAP, y = GAP) {
+    for (let i = 1; i < n_mats; ++i) {
+        draw_2d(n_rows, n_cols, x, y, false);
+        x += MATRIX_GAP;
+        y += MATRIX_GAP;
+    }
+
+    draw_2d(n_rows, n_cols, x, y);
+}
+
 function draw_ndim(shape) {
-    let upper_dim_shape = shape.slice(0, -2);
+    let upper_dim_shape = shape.slice(0, -3);
     alert("Not yet implemented!");
 }
 
@@ -136,3 +170,5 @@ function download_image(e) {
         alert("Image is not yet created!");
     }
 }
+
+visualize();
