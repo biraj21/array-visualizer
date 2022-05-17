@@ -51,7 +51,7 @@ function is_digit(c) {
 }
 
 function parse_int(str) {
-    for (let c in str) {
+    for (let c of str) {
         if (!is_digit(c))
             return NaN;
     }
