@@ -2,11 +2,11 @@
 
 const BG_COLOR = "#08090a";
 const BLUE = "#3ab1d2";
-const ORANGE = "#ffc457";
+const ORANGE = "#ffbc03";
 const PINK = "#c22eb8";
 
-const GAP = 10;
-const MATRIX_GAP = 15; // gap between matrices in a 3D array
+const GAP = 8;
+const MATRIX_GAP = 12; // gap between matrices in a 3D array
 const CELL_SIZE = 25;
 
 const canvas = document.getElementById("vis");
@@ -78,8 +78,8 @@ function canvas_size(shape) {
 
         case 3:
             [n_mats, n_rows, n_cols] = shape;
-            width += 2 * GAP + CELL_SIZE * n_cols + (n_cols - 1) * GAP + (n_mats - 1) * MATRIX_GAP;
-            height += n_rows * CELL_SIZE + (n_rows + 1) * GAP + (n_mats - 1) * MATRIX_GAP;
+            width += 4 * GAP + n_cols * CELL_SIZE + (n_cols - 1) * GAP + (n_mats - 1) * MATRIX_GAP;
+            height += 2 * GAP + n_rows * CELL_SIZE + (n_rows + 1) * GAP + (n_mats - 1) * MATRIX_GAP;
     }
 
     return [width, height];
@@ -150,6 +150,16 @@ function draw_2d(n_rows, n_cols, x = GAP, y = GAP, complete = true) {
 }
 
 function draw_3d(n_mats, n_rows, n_cols, x = GAP, y = GAP) {
+    let width = 4 * GAP + n_cols * CELL_SIZE + (n_cols - 1) * GAP + (n_mats - 1) * MATRIX_GAP;
+    let height = 2 * GAP + n_rows * CELL_SIZE + (n_rows + 1) * GAP + (n_mats - 1) * MATRIX_GAP;
+
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = ORANGE;
+    ctx.strokeRect(x, y, width, height);
+
+    x += GAP;
+    y += GAP;
+
     for (let i = 1; i < n_mats; ++i) {
         draw_2d(n_rows, n_cols, x, y, false);
         x += MATRIX_GAP;
