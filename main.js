@@ -43,12 +43,7 @@ function visualize() {
 
     [canvas.width, canvas.height] = canvas_size(shape);
     clear_canvas();
-    vis_draw(shape);
-
-    canvas.toBlob(blob => {
-        download_btn_el.href = URL.createObjectURL(blob);
-        image_created = true;
-    });
+    draw(shape);
 }
 
 /*** UTILITY STUFF ***/
@@ -87,13 +82,18 @@ function clear_canvas() {
 }
 
 /*** DRAWING STUFF ***/
-function vis_draw(shape) {
+function draw(shape) {
     if (shape.length == 1)
         draw_vector(shape[0]);
     else if (shape.length == 2)
         draw_matrix(shape[0], shape[1]);
     else
         draw_ndim(shape);
+
+    canvas.toBlob(blob => {
+        download_btn_el.href = URL.createObjectURL(blob);
+        image_created = true;
+    });
 }
 
 function draw_vector(len, x = GAP, y = GAP, bg_color = BG_COLOR) {
@@ -127,6 +127,7 @@ function draw_matrix(n_rows, n_cols, x = GAP, y = GAP) {
 
 function draw_ndim(shape) {
     let upper_dim_shape = shape.slice(0, -2);
+    alert("Not yet implemented!");
 }
 
 function download_image(e) {
