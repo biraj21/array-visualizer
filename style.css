@@ -64,3 +64,11 @@ body {
     color: #ffc457;
     color: #c22eb8;
 }
+
+footer {
+    width: 100%;
+    color: #fff;
+    position: fixed;
+    text-align: center;
+    bottom: 16px;
+}
