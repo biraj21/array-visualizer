@@ -6,16 +6,15 @@ const ORANGE = "#ffbc03";
 const PINK = "#c22eb8";
 const RED = "#C1554D";
 const GREEN = "#97B82B";
-const LIGHT_YELLOW = "#FFEDCB";
 
-const colors = [LIGHT_YELLOW, RED, GREEN, PINK, BLUE];
+const colors = [ORANGE, RED, GREEN, BLUE, PINK];
 
 const LINE_WIDTH = 2;
 
 const GAP = 10;
-const MATRIX_GAP_X = 15; // gap between matrices in a 3D array
-const MATRIX_GAP_Y = 13; // gap between matrices in a 3D array
-const ND_SHAPE_GAP = 25 // gap between 3D - ND shapes
+const MATRIX_GAP_X = 15; // horizontal gap between matrices in a 3D array
+const MATRIX_GAP_Y = 13; // vertical gap between matrices in a 3D array
+const ND_SHAPE_GAP = 25 // gap between ND shapes
 const CELL_SIZE = 25;
 
 const canvas = document.getElementById("vis");
