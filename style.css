@@ -66,3 +66,7 @@ footer {
     text-align: center;
     bottom: 16px;
 }
+
+footer a {
+    color: #5050ff;
+}
