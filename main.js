@@ -30,10 +30,7 @@ const ctx = canvas.getContext("2d");
 let image_created = false;
 
 function visualize() {
-    image_created = false;
-
-    let shape = (
-        shape_input_el.value
+    let shape = (shape_input_el.value
         .trim()
         .replace(/\s+/g, " ")
         .split(" ")
@@ -44,6 +41,8 @@ function visualize() {
         alert("Enter a valid shape!");
         return;
     }
+
+    image_created = false;
 
     [canvas.width, canvas.height] = shape_size(shape);
     canvas.width += 2 * GAP;
@@ -78,12 +77,10 @@ function shape_size(shape) {
         const [n_rows, n_cols] = shape;
         width = n_cols * CELL_SIZE + (shape[1] + 1) * GAP;
         height = n_rows * CELL_SIZE + (n_rows + 1) * GAP;
-    } else if (ndims == 3) {
-        const [n_mats, n_rows, n_cols] = shape;
+    } else {
+        const [n_mats, n_rows, n_cols] = shape.slice(-3);
         width = n_cols * CELL_SIZE + (n_cols + 3) * GAP + (n_mats - 1) * MATRIX_GAP_X;
         height = n_rows * CELL_SIZE + (n_rows + 3) * GAP + (n_mats - 1) * MATRIX_GAP_Y;
-    } else {
-        [width, height] = shape_size(shape.slice(-3));
 
         let horizontal = true;
         for (let i = ndims - 4; i >= 0; --i) {
@@ -185,8 +182,8 @@ function draw_3d(shape, x, y) {
     ctx.strokeStyle = ORANGE;
     ctx.strokeRect(x, y, width, height);
 
-    const shape_end_x = x + width,
-        shape_end_y = y + height;
+    const shape_end_x = x + width;
+    const shape_end_y = y + height;
 
     x += GAP;
     y += GAP;
@@ -212,8 +209,8 @@ function draw_nd(shape, x, y) {
     ctx.lineWidth = LINE_WIDTH;
     ctx.strokeRect(x, y, width, height);
 
-    const shape_end_x = x + width,
-        shape_end_y = y + height;
+    const shape_end_x = x + width;
+    const shape_end_y = y + height;
 
     x += GAP;
     y += GAP;
@@ -221,7 +218,6 @@ function draw_nd(shape, x, y) {
     let horizontal = ndims % 2 == 0;
     for (let i = 0; i < shape[0]; ++i) {
         const [new_x, new_y] = draw_nd(shape.slice(1), x, y);
-
         if (horizontal)
             x = new_x + ND_SHAPE_GAP;
         else
