@@ -37,8 +37,8 @@ function visualize() {
         .map(size => parse_int(size))
     );
 
-    if (shape.some(size => isNaN(size))) {
-        alert("Enter a valid shape!");
+    if (shape.some(size => isNaN(size) || size == 0)) {
+        alert("Enter a valid shape! (e.g. 3 5 3 3)");
         return;
     }
 
